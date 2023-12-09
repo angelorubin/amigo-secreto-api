@@ -20,8 +20,6 @@ export const login: RequestHandler = (req, res) => {
 
   const validation = loginSchema.parse(req.body);
 
-  console.log(validation)
-
   /*
   // Tipagem da requisição usando a interface iLogin
   const validation: ILogin = loginSchema.parse(req.body);
