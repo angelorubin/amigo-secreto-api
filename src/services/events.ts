@@ -12,27 +12,17 @@ export const getAll = async () => {
 
 export const getEventById = async (id: number) => {
   try {
-    const event = await prisma.event.findFirst({
+    return await prisma.event.findFirst({
       where: {
         id,
       },
-    });
-
-    if (event) {
-      return event;
-    } else {
-      return false;
-    }
+    })
   } catch (error) {
     return false;
   }
 };
 
-interface IAddEvent {
-  title: string;
-  description: string;
-  grouped?: boolean;
-}
+type IAddEvent = Prisma.Args<typeof prisma.event, 'create'>['data']
 
 export const add = async (data: IAddEvent) => {
   try {
