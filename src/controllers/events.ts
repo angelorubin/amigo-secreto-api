@@ -28,19 +28,20 @@ export const addEvent: RequestHandler = async (req, res) => {
   const schemaAddEvent = z.object({
     title: z.string(),
     description: z.string(),
+    status: z.boolean(),
     grouped: z.boolean(),
   });
 
-  const event = schemaAddEvent.safeParse(req.body);
+  const validation = schemaAddEvent.safeParse(req.body);
 
-  if (!event.success) {
+  if (!validation.success) {
     return res.json({ error: "Dados inválidos" });
   }
 
-  const newEvent = await events.add(event.data);
+  const newEvent = await events.add(validation.data);
 
   if (newEvent) {
-    return res.status(201).json({ event: newEvent });
+    return res.status(201).json({ eventAdded: newEvent });
   }
 
   res.json({ error: "Ocorreu um erro" });
