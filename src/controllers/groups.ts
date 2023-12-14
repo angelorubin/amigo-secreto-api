@@ -14,23 +14,69 @@ export const getGroups: RequestHandler = async (req, res) => {
   res.json({ error: "Ocorreu um erro" });
 };
 
-export const getGroupById: RequestHandler = async (req, res) => {
+export const getGroupByIdEvent: RequestHandler = async (req, res) => {
   const { id, id_event } = req.params
 
-  const schemaGroup = z.object({
-    id: z.string(),
-    id_event: z.string()
+  const groupItem = await groups.getGroupById({
+    id: parseInt(id),
+    id_event: parseInt(id_event)
   })
 
-  const filters = schemaGroup.safeParse({ id, id_event })
-
-  if (filters.success) {
-    const group = await groups.getGroupById({
-      id: +filters.data.id,
-      id_event: +filters.data.id_event
-    });
-    return res.json({ group });
+  if (groupItem) {
+    return res.json({ groupItem })
   }
 
-  res.json({ error: "Ocorreu um erro" });
+  res.json({ error: "Ocorreu um erro" })
+}
+
+export const createGroup: RequestHandler = async (req, res) => {
+  const { id_event } = req.params
+  const { name } = await req.body
+
+  const createGroupSchema = z.object({
+    name: z.string()
+  })
+
+  const validation = createGroupSchema.safeParse(req.body)
+
+  if (!validation.success) {
+    res.json({ error: "Dados inválidos" })
+  }
+
+  const createdGroup = await groups.createGroup({
+    id_event: parseInt(id_event),
+    name
+  })
+
+  if (createdGroup) return res.status(201).json({ createdGroup })
+
+  return res.json({ error: 'Ocorreu um erro' })
+}
+
+export const updateGroup: RequestHandler = async (req, res) => {
+  const { id, id_event } = req.params
+
+  const schemaValidation = z.object({
+    name: z.string().optional()
+  })
+
+  const resultValidation = schemaValidation.safeParse(req.body)
+
+  if (!resultValidation.success) {
+    return res.json({ error: 'Dados inválidos' })
+  }
+
+  const updatedGroup = await groups.updateGroup(
+    {
+      id: parseInt(id),
+      id_event: parseInt(id_event)
+    },
+    resultValidation.data
+  )
+
+  if (!updatedGroup) {
+    res.json({ error: 'Ocorreu um erro' })
+  }
+
+  return res.json({ updateGroup })
 }
