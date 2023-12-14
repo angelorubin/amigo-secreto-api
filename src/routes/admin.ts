@@ -20,6 +20,9 @@ router.delete("/events/:id", auth.validate, events.destroyEvent)
 
 // admin/events/groups
 router.get("/events/:id_event/groups", auth.validate, groups.getGroups)
-router.get("/events/:id_event/groups/:id", auth.validate, groups.getGroupById)
+router.get("/events/:id_event/groups/:id", auth.validate, groups.getGroupByIdEvent)
+router.post("/events/:id_event/groups", auth.validate, groups.createGroup)
+router.put("/events/:id_event/groups/:id", auth.validate, groups.updateGroup)
+
 
 export default router;
