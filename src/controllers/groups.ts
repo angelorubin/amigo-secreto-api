@@ -66,7 +66,7 @@ export const updateGroup: RequestHandler = async (req, res) => {
     return res.json({ error: 'Dados inválidos' })
   }
 
-  const updatedGroup = await groups.updateGroup(
+  const updatedGroup = await groups.updateEventGroup(
     {
       id: parseInt(id),
       id_event: parseInt(id_event)
@@ -78,5 +78,21 @@ export const updateGroup: RequestHandler = async (req, res) => {
     res.json({ error: 'Ocorreu um erro' })
   }
 
-  return res.json({ updateGroup })
+  return res.json({ updatedGroup })
+}
+
+export const destroyGroup: RequestHandler = async (req, res) => {
+  const { id, id_event } = req.params
+
+  const deletedGroup = await groups.destroyEventGroup({
+    id: parseInt(id),
+    id_event: parseInt(id_event)
+  })
+
+  if (deletedGroup) {
+    return res.json({
+      deletedGroup
+    })
+  }
+  return res.json({ error: "Ocorreu um erro" })
 }

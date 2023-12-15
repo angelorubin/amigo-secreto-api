@@ -2,7 +2,7 @@ import { RequestHandler } from "express";
 import * as events from "../services/events";
 import { z } from "zod";
 
-export const getEvents: RequestHandler = async (req, res) => {
+export const retrieveEvents: RequestHandler = async (req, res) => {
   const items = await events.getEvents();
 
   if (items) {
@@ -12,7 +12,7 @@ export const getEvents: RequestHandler = async (req, res) => {
   res.json({ error: "Ocorreu um erro" });
 };
 
-export const getEventById: RequestHandler = async (req, res) => {
+export const retrieveEvent: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
   const event = await events.getEventById(parseInt(id));
