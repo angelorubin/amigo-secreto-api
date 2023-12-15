@@ -10,3 +10,16 @@ export const retrieveAll = async (filters: RetrieveAllFilters) => {
     return false;
   }
 };
+
+type RetrievePersonFilters = {
+  id_event: number;
+  id_group?: number;
+  id?: number;
+  cpf?: number;
+};
+export const retrievePerson = async (filters: RetrievePersonFilters) => {
+  try {
+  } catch (error) {
+    return false;
+  }
+};

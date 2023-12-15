@@ -41,4 +41,10 @@ router.get(
   people.retrieveAll,
 );
 
+router.get(
+  "/events/:id_event/groups/:id_group/people/:id",
+  auth.validate,
+  people.retrievePerson,
+);
+
 export default router;
