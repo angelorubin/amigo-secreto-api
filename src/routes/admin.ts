@@ -1,8 +1,8 @@
 import { Router } from "express";
 import * as auth from "../controllers/auth";
 import * as events from "../controllers/events";
-import * as groups from "../controllers/groups"
-import * as people from "../controllers/people"
+import * as groups from "../controllers/groups";
+import * as people from "../controllers/people";
 
 const router = Router();
 
@@ -16,17 +16,29 @@ router.post("/ping", (req, res) => {
 router.get("/events", auth.validate, events.retrieveEvents);
 router.get("/events/:id", auth.validate, events.retrieveEvent);
 router.post("/events", auth.validate, events.createEvent);
-router.put("/events/:id", auth.validate, events.updateEvent)
-router.delete("/events/:id", auth.validate, events.destroyEvent)
+router.put("/events/:id", auth.validate, events.updateEvent);
+router.delete("/events/:id", auth.validate, events.destroyEvent);
 
 // admin/events/groups
-router.get("/events/:id_event/groups", auth.validate, groups.getGroups)
-router.get("/events/:id_event/groups/:id", auth.validate, groups.getGroupByIdEvent)
-router.post("/events/:id_event/groups", auth.validate, groups.createGroup)
-router.put("/events/:id_event/groups/:id", auth.validate, groups.updateGroup)
-router.delete("/events/:id_event/groups/:id", auth.validate, groups.destroyGroup)
+router.get("/events/:id_event/groups", auth.validate, groups.getGroups);
+router.get(
+  "/events/:id_event/groups/:id",
+  auth.validate,
+  groups.getGroupByIdEvent,
+);
+router.post("/events/:id_event/groups", auth.validate, groups.createGroup);
+router.put("/events/:id_event/groups/:id", auth.validate, groups.updateGroup);
+router.delete(
+  "/events/:id_event/groups/:id",
+  auth.validate,
+  groups.destroyGroup,
+);
 
-// admin/events/people
-router.get("/events/:id_event/people/:id_group", auth.validate, people.retrieveAll)
+// admin/events/groups/people
+router.get(
+  "/events/:id_event/groups/:id_group/people",
+  auth.validate,
+  people.retrieveAll,
+);
 
 export default router;
