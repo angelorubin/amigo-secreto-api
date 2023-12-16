@@ -25,7 +25,7 @@ export const retrievePerson: RequestHandler = async (req, res) => {
     id_event: parseInt(id_event),
     id_group: parseInt(id_group),
     id: parseInt(id),
-    cpf: parseInt(cpf),
+    cpf,
   });
 
   if (person) {
@@ -33,4 +33,39 @@ export const retrievePerson: RequestHandler = async (req, res) => {
   }
 
   return res.json({ error: "Ocorreu um erro" });
+};
+
+export const createPerson: RequestHandler = async (req, res) => {
+  const { id_event, id_group } = req.params;
+
+  const schemaValidation = z.object({
+    name: z.string(),
+    cpf: z.string(),
+    matched: z.string()
+  })
+
+  const validatePerson = schemaValidation.safeParse(req.body)
+
+  if (!validatePerson.success) {
+    return res.json({ error: "Ocorreu um erro" });
+  }
+
+  const createdPerson = await people.createPerson(
+    validatePerson, { id_event, id_group }
+  )
+
+  res.json({ createdPerson })
+
+  /**
+  const person = await people.retrievePerson({
+    id_event: parseInt(id_event),
+    id_group: parseInt(id_group),
+    id: parseInt(id),
+    cpf,
+  });
+
+  if (person) {
+    return res.json({ person });
+  }
+  */
 };
