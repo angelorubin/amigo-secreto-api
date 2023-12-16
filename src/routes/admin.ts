@@ -47,4 +47,10 @@ router.get(
   people.retrievePerson,
 );
 
+router.post(
+  "/events/:id_event/groups/:id_group/people",
+  auth.validate,
+  people.createPerson,
+);
+
 export default router;
