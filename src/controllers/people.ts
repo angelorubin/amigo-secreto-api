@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import * as people from "../services/people";
+import * as groups from "../services/groups";
 import { z } from "zod";
 
 export const retrieveAll: RequestHandler = async (req, res) => {
@@ -80,8 +81,6 @@ export const updatePerson: RequestHandler = async (req, res) => {
     return res.json({ error: "Dados inválidos" });
   }
 
-  const { name } = validation.data;
-
   const updatedPerson = await people.updatePerson(
     {
       id: parseInt(id),
@@ -109,6 +108,14 @@ export const updatePerson: RequestHandler = async (req, res) => {
 export const destroyPerson: RequestHandler = async (req, res) => {
   const { id, id_event, id_group } = req.params;
 
+  const filters = {
+    id: parseInt(id),
+    id_event: parseInt(id_event),
+    id_group: parseInt(id_group),
+  };
+
+  const personData = await people.retrievePerson(filters);
+
   const destroyedPerson = await people.destroyPerson({
     id: parseInt(id),
     id_event: parseInt(id_event),
@@ -116,7 +123,7 @@ export const destroyPerson: RequestHandler = async (req, res) => {
   });
 
   if (destroyedPerson) {
-    return res.json({ destroyPerson });
+    return res.json({ destroyedPerson: personData });
   }
 
   return res.json({ error: "Ocorreu um erro" });
