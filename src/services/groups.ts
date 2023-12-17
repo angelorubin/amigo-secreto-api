@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import * as events from "../services/events";
+
 const prisma = new PrismaClient();
 
 export const getGroups = async (id_event: number) => {

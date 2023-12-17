@@ -4,6 +4,7 @@ import * as groups from "./groups";
 const prisma = new PrismaClient();
 
 type RetrieveAllFilters = { id_event: number; id_group: number };
+
 export const retrieveAll = async (filters: RetrieveAllFilters) => {
   try {
     return await prisma.eventPeople.findMany({ where: filters });
@@ -18,6 +19,7 @@ type RetrievePersonFilters = {
   id?: number;
   cpf?: string;
 };
+
 export const retrievePerson = async (filters: RetrievePersonFilters) => {
   try {
     if (!filters.id && filters.cpf) {
@@ -30,6 +32,7 @@ export const retrievePerson = async (filters: RetrievePersonFilters) => {
 };
 
 type CreatePerson = Prisma.Args<typeof prisma.eventPeople, "create">["data"];
+
 export const createPerson = async (data: CreatePerson) => {
   try {
     if (!data.id_group) {
@@ -46,6 +49,30 @@ export const createPerson = async (data: CreatePerson) => {
     }
 
     return await prisma.eventPeople.create({ data });
+  } catch (error) {
+    return false;
+  }
+};
+
+type UpdatePerson = Prisma.Args<typeof prisma.eventPeople, "update">["data"];
+type UpdateFilters = { id?: number; id_event: number; id_group?: number };
+
+export const updatePerson = async (
+  filters: UpdateFilters,
+  data: UpdatePerson,
+) => {
+  try {
+    return await prisma.eventPeople.updateMany({ where: filters, data });
+  } catch (error) {
+    return false;
+  }
+};
+
+type DestroyFilters = { id: number; id_event?: number; id_group?: number };
+
+export const destroyPerson = async (filters: DestroyFilters) => {
+  try {
+    return await prisma.eventPeople.delete({ where: filters });
   } catch (error) {
     return false;
   }

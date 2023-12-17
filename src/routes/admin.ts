@@ -46,5 +46,16 @@ router.post(
   auth.validate,
   people.createPerson,
 );
+router.put(
+  "/events/:id_event/groups/:id_group/people/:id",
+  auth.validate,
+  people.updatePerson,
+);
+
+router.delete(
+  "/events/:id_event/groups/:id_group/people/:id",
+  auth.validate,
+  people.destroyPerson,
+);
 
 export default router;

@@ -61,3 +61,63 @@ export const createPerson: RequestHandler = async (req, res) => {
 
   return res.json({ error: "Ocorreu um erro" });
 };
+
+export const updatePerson: RequestHandler = async (req, res) => {
+  const { id, id_event, id_group } = req.params;
+
+  const schemaUpdate = z.object({
+    name: z.string().optional(),
+    cpf: z
+      .string()
+      .transform((val) => val.replace(/\.|-/gm, ""))
+      .optional(),
+    matched: z.string().optional(),
+  });
+
+  const validation = schemaUpdate.safeParse(req.body);
+
+  if (!validation.success) {
+    return res.json({ error: "Dados inválidos" });
+  }
+
+  const { name } = validation.data;
+
+  const updatedPerson = await people.updatePerson(
+    {
+      id: parseInt(id),
+      id_event: parseInt(id_event),
+      id_group: parseInt(id_group),
+    },
+    validation.data,
+  );
+
+  if (updatedPerson) {
+    const filters = {
+      id: parseInt(id),
+      id_event: parseInt(id_event),
+      id_group: parseInt(id_group),
+    };
+
+    const person = await people.retrievePerson(filters);
+
+    return res.json({ updatedPerson: person });
+  }
+
+  return res.json({ error: "Ocorreu um erro" });
+};
+
+export const destroyPerson: RequestHandler = async (req, res) => {
+  const { id, id_event, id_group } = req.params;
+
+  const destroyedPerson = await people.destroyPerson({
+    id: parseInt(id),
+    id_event: parseInt(id_event),
+    id_group: parseInt(id_group),
+  });
+
+  if (destroyedPerson) {
+    return res.json({ destroyPerson });
+  }
+
+  return res.json({ error: "Ocorreu um erro" });
+};
