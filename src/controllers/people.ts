@@ -11,7 +11,7 @@ export const retrieveAll: RequestHandler = async (req, res) => {
   });
 
   if (items) {
-    return res.json({ items });
+    return res.json({ people: items });
   }
 
   return res.json({ error: "Ocorreu um erro" });
@@ -40,32 +40,24 @@ export const createPerson: RequestHandler = async (req, res) => {
 
   const schemaValidation = z.object({
     name: z.string(),
-    cpf: z.string(),
-    matched: z.string()
-  })
-
-  const validatePerson = schemaValidation.safeParse(req.body)
-
-  if (!validatePerson.success) {
-    return res.json({ error: "Ocorreu um erro" });
-  }
-
-  const createdPerson = await people.createPerson(
-    validatePerson, { id_event, id_group }
-  )
-
-  res.json({ createdPerson })
-
-  /**
-  const person = await people.retrievePerson({
-    id_event: parseInt(id_event),
-    id_group: parseInt(id_group),
-    id: parseInt(id),
-    cpf,
+    cpf: z.string().transform((val) => val.replace(/\.|-/gm, "")),
   });
 
-  if (person) {
-    return res.json({ person });
+  const validatedPerson = schemaValidation.safeParse(req.body);
+
+  if (!validatedPerson.success) {
+    return res.json({ error: "Dados inválidos" });
   }
-  */
+
+  const createdPerson = await people.createPerson({
+    ...validatedPerson.data,
+    id_event: parseInt(id_event),
+    id_group: parseInt(id_group),
+  });
+
+  if (createdPerson) {
+    return res.json({ createdPerson });
+  }
+
+  return res.json({ error: "Ocorreu um erro" });
 };

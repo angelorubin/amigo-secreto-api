@@ -21,11 +21,7 @@ router.delete("/events/:id", auth.validate, events.destroyEvent);
 
 // admin/events/groups
 router.get("/events/:id_event/groups", auth.validate, groups.getGroups);
-router.get(
-  "/events/:id_event/groups/:id",
-  auth.validate,
-  groups.getGroupByIdEvent,
-);
+router.get("/events/:id_event/groups/:id", auth.validate, groups.getGroup);
 router.post("/events/:id_event/groups", auth.validate, groups.createGroup);
 router.put("/events/:id_event/groups/:id", auth.validate, groups.updateGroup);
 router.delete(
@@ -40,13 +36,11 @@ router.get(
   auth.validate,
   people.retrieveAll,
 );
-
 router.get(
   "/events/:id_event/groups/:id_group/people/:id",
   auth.validate,
   people.retrievePerson,
 );
-
 router.post(
   "/events/:id_event/groups/:id_group/people",
   auth.validate,
