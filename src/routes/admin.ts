@@ -51,7 +51,6 @@ router.put(
   auth.validate,
   people.updatePerson,
 );
-
 router.delete(
   "/events/:id_event/groups/:id_group/people/:id",
   auth.validate,

@@ -1,5 +1,5 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import { string } from "zod";
+import { z } from "zod";
 
 const prisma = new PrismaClient();
 
@@ -24,6 +24,7 @@ export const getEventById = async (id: number) => {
 };
 
 type EventCreate = Prisma.Args<typeof prisma.event, 'create'>['data']
+
 export const create = async (data: EventCreate) => {
   try {
     return await prisma.event.create({
@@ -35,6 +36,7 @@ export const create = async (data: EventCreate) => {
 };
 
 type EventUpdate = Prisma.Args<typeof prisma.event, 'update'>['data']
+
 export const update = async (id: number, data: EventUpdate) => {
   try {
     return await prisma.event.update({
@@ -54,3 +56,21 @@ export const destroy = async (id: number) => {
     return false
   }
 };
+
+export const doMatches = async (id: number): Promise<boolean> => {
+
+  /**
+   * Grupo A
+   * - Angelo
+   * - Marcio
+   * - Pedro
+   *
+   * Grupo B
+   * - João
+   * - Inacio
+   *
+   * Grupo C
+   * - Janaina
+   */
+  return true
+}
