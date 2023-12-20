@@ -2,10 +2,10 @@ import { RequestHandler } from "express";
 import * as groups from "../services/groups";
 import { z } from "zod";
 
-export const getGroups: RequestHandler = async (req, res) => {
+export const retrieveGroups: RequestHandler = async (req, res) => {
   const { id_event } = req.params;
 
-  const item = await groups.getGroups(Number(id_event));
+  const item = await groups.retrieveGroups(Number(id_event));
 
   if (item) {
     return res.json({ groups: item });
@@ -14,10 +14,10 @@ export const getGroups: RequestHandler = async (req, res) => {
   res.json({ error: "Ocorreu um erro" });
 };
 
-export const getGroup: RequestHandler = async (req, res) => {
+export const retrieveGroup: RequestHandler = async (req, res) => {
   const { id, id_event } = req.params;
 
-  const groupItem = await groups.getGroup({
+  const groupItem = await groups.retrieveGroup({
     id: parseInt(id),
     id_event: parseInt(id_event),
   });

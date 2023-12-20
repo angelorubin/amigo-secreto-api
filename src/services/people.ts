@@ -3,9 +3,9 @@ import * as groups from "./groups";
 
 const prisma = new PrismaClient();
 
-type RetrieveAllFilters = { id_event: number; id_group: number };
+type RetrievePeopleFilters = { id_event: number; id_group: number };
 
-export const retrieveAll = async (filters: RetrieveAllFilters) => {
+export const retrievePeople = async (filters: RetrievePeopleFilters) => {
   try {
     return await prisma.eventPeople.findMany({ where: filters });
   } catch (error) {

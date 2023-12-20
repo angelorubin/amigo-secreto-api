@@ -3,7 +3,7 @@ import { z } from "zod";
 
 const prisma = new PrismaClient();
 
-export const getEvents = async () => {
+export const retrieveEvents = async () => {
   try {
     return await prisma.event.findMany();
   } catch (error) {
@@ -11,7 +11,7 @@ export const getEvents = async () => {
   }
 };
 
-export const getEventById = async (id: number) => {
+export const retrieveEvent = async (id: number) => {
   try {
     return await prisma.event.findFirst({
       where: {
@@ -58,7 +58,6 @@ export const destroy = async (id: number) => {
 };
 
 export const doMatches = async (id: number): Promise<boolean> => {
-
   /**
    * Grupo A
    * - Angelo

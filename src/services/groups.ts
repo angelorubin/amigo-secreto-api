@@ -3,7 +3,7 @@ import * as events from "../services/events";
 
 const prisma = new PrismaClient();
 
-export const getGroups = async (id_event: number) => {
+export const retrieveGroups = async (id_event: number) => {
   try {
     return await prisma.eventGroup.findMany({ where: { id_event } });
   } catch (error) {
@@ -15,7 +15,8 @@ type GetGroupFilters = {
   id: number;
   id_event?: number;
 };
-export const getGroup = async (filters: GetGroupFilters) => {
+
+export const retrieveGroup = async (filters: GetGroupFilters) => {
   try {
     return await prisma.eventGroup.findFirst({
       where: {
@@ -29,6 +30,7 @@ export const getGroup = async (filters: GetGroupFilters) => {
 };
 
 type CreateGroupData = Prisma.Args<typeof prisma.eventGroup, "create">["data"];
+
 export const createGroup = async (data: CreateGroupData) => {
   try {
     if (!data.id_event) {
@@ -46,6 +48,7 @@ export const createGroup = async (data: CreateGroupData) => {
 
 type UpdateFilters = { id: number; id_event: number };
 type UpdateData = Prisma.Args<typeof prisma.eventGroup, "update">["data"];
+
 export const updateEventGroup = async (
   filters: UpdateFilters,
   data: UpdateData,
@@ -64,6 +67,7 @@ type DestroyFilters = {
   id: number;
   id_event: number;
 };
+
 export const destroyEventGroup = async (filters: DestroyFilters) => {
   try {
     return await prisma.eventGroup.delete({

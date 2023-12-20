@@ -20,8 +20,8 @@ router.put("/events/:id", auth.validate, events.updateEvent);
 router.delete("/events/:id", auth.validate, events.destroyEvent);
 
 // admin/events/groups
-router.get("/events/:id_event/groups", auth.validate, groups.getGroups);
-router.get("/events/:id_event/groups/:id", auth.validate, groups.getGroup);
+router.get("/events/:id_event/groups", auth.validate, groups.retrieveGroups);
+router.get("/events/:id_event/groups/:id", auth.validate, groups.retrieveGroup);
 router.post("/events/:id_event/groups", auth.validate, groups.createGroup);
 router.put("/events/:id_event/groups/:id", auth.validate, groups.updateGroup);
 router.delete(

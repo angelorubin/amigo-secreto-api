@@ -1,12 +1,11 @@
 import { RequestHandler } from "express";
 import * as people from "../services/people";
-import * as groups from "../services/groups";
 import { z } from "zod";
 
-export const retrieveAll: RequestHandler = async (req, res) => {
+export const retrievePeople: RequestHandler = async (req, res) => {
   const { id_event, id_group } = req.params;
 
-  const items = await people.retrieveAll({
+  const items = await people.retrievePeople({
     id_event: parseInt(id_event),
     id_group: parseInt(id_group),
   });

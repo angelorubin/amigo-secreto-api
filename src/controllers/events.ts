@@ -4,7 +4,7 @@ import * as people from "../services/people"
 import { z } from "zod";
 
 export const retrieveEvents: RequestHandler = async (req, res) => {
-  const items = await events.getEvents();
+  const items = await events.retrieveEvents();
 
   if (items) {
     return res.json({ events: items });
@@ -16,7 +16,7 @@ export const retrieveEvents: RequestHandler = async (req, res) => {
 export const retrieveEvent: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
-  const event = await events.getEventById(parseInt(id));
+  const event = await events.retrieveEvent(parseInt(id));
 
   if (event) {
     return res.json({ event });
@@ -69,7 +69,6 @@ export const updateEvent: RequestHandler = async (req, res) => {
 
   if (updatedEvent) {
     if (updatedEvent.status) {
-      // TODO: fazer o sorteio
       const result = await events.doMatches(parseInt(id))
 
       if (result) {
@@ -81,9 +80,9 @@ export const updateEvent: RequestHandler = async (req, res) => {
     else {
       await people.updatePerson({ id_event: parseInt(id) }, { matched: "" })
     }
+
     return res.status(201).json({ updatedEvent });
   }
-
   res.json({ error: "Ocorreu um erro" });
 };
 
