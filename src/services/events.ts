@@ -1,5 +1,5 @@
 import { PrismaClient, Prisma } from "@prisma/client";
-import { z } from "zod";
+import { number, z } from "zod";
 import * as people from "./people"
 import * as groups from "./groups"
 
@@ -79,7 +79,16 @@ export const doMatches = async (id: number): Promise<boolean> => {
   })
 
   if (eventItem) {
-    const peopleList = await people.retrievePeople({ id_event: id })
+    const peopleList = await people.retrievePeople({
+      id_event: id
+    })
+
+    if (peopleList) {
+      let sortedList: { id: number; match: number }[] = []
+      let sortable: number[] = []
+
+
+    }
   }
 
   return false

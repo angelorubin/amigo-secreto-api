@@ -3,7 +3,7 @@ import * as groups from "./groups";
 
 const prisma = new PrismaClient();
 
-type RetrievePeopleFilters = { id_event: number; id_group: number };
+type RetrievePeopleFilters = { id_event: number; id_group?: number };
 
 export const retrievePeople = async (filters: RetrievePeopleFilters) => {
   try {
