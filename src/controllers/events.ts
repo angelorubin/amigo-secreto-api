@@ -52,14 +52,14 @@ export const updateEvent: RequestHandler = async (req, res) => {
 
   const { id } = req.params
 
-  const schemaUpdateEvent = z.object({
+  const schemaUpdate = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
     status: z.boolean().optional(),
     grouped: z.boolean().optional(),
   });
 
-  const validation = schemaUpdateEvent.safeParse(req.body);
+  const validation = schemaUpdate.safeParse(req.body);
 
   if (!validation.success) {
     return res.json({ error: "Dados inválidos" });

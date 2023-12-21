@@ -34,7 +34,7 @@ router.delete(
 router.get(
   "/events/:id_event/groups/:id_group/people",
   auth.validate,
-  people.retrieveAll,
+  people.retrievePeople,
 );
 router.get(
   "/events/:id_event/groups/:id_group/people/:id",

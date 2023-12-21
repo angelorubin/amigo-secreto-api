@@ -1,5 +1,7 @@
 import { PrismaClient, Prisma } from "@prisma/client";
 import { z } from "zod";
+import * as people from "./people"
+import * as groups from "./groups"
 
 const prisma = new PrismaClient();
 
@@ -59,17 +61,26 @@ export const destroy = async (id: number) => {
 
 export const doMatches = async (id: number): Promise<boolean> => {
   /**
-   * Grupo A
+   * Grupo A (ID:1)
    * - Angelo
    * - Marcio
    * - Pedro
    *
-   * Grupo B
+   * Grupo B (ID: 2)
    * - João
    * - Inacio
    *
-   * Grupo C
+   * Grupo C (ID: 3)
    * - Janaina
    */
-  return true
+
+  const eventItem = await prisma.event.findFirst({
+    where: { id }, select: { grouped: true }
+  })
+
+  if (eventItem) {
+    const peopleList = await people.retrievePeople({ id_event: id })
+  }
+
+  return false
 }

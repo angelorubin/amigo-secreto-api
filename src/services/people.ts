@@ -39,7 +39,7 @@ export const createPerson = async (data: CreatePerson) => {
       return false;
     }
 
-    const group = await groups.getGroup({
+    const group = await groups.retrieveGroup({
       id: data.id_group,
       id_event: data.id_event,
     });
