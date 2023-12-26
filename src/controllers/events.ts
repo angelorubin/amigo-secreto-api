@@ -1,6 +1,6 @@
 import { RequestHandler } from "express";
 import * as events from "../services/events";
-import * as people from "../services/people"
+import * as people from "../services/people";
 import { z } from "zod";
 
 export const retrieveEvents: RequestHandler = async (req, res) => {
@@ -49,8 +49,7 @@ export const createEvent: RequestHandler = async (req, res) => {
 };
 
 export const updateEvent: RequestHandler = async (req, res) => {
-
-  const { id } = req.params
+  const { id } = req.params;
 
   const schemaUpdate = z.object({
     title: z.string().optional(),
@@ -69,26 +68,25 @@ export const updateEvent: RequestHandler = async (req, res) => {
 
   if (updatedEvent) {
     if (updatedEvent.status) {
-      const result = await events.doMatches(parseInt(id))
+      const result = await events.doMatches(parseInt(id));
 
       if (result) {
-        return res.json({ error: "Grupos impossíveis de sortear" })
+        return res.json({ error: "Grupos impossíveis de sortear" });
       } else {
-        return res.json({ groups: result })
+        return res.json({ groups: result });
       }
-    }
-    else {
-      await people.updatePerson({ id_event: parseInt(id) }, { matched: "" })
+    } else {
+      await people.updatePerson({ id_event: parseInt(id) }, { matched: "" });
     }
 
     return res.status(201).json({ updatedEvent });
   }
+
   res.json({ error: "Ocorreu um erro" });
 };
 
 export const destroyEvent: RequestHandler = async (req, res) => {
-
-  const { id } = req.params
+  const { id } = req.params;
 
   const destroyedEvent = await events.destroy(parseInt(id));
 
