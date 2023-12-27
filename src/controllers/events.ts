@@ -76,7 +76,10 @@ export const updateEvent: RequestHandler = async (req, res) => {
         return res.json({ groups: result });
       }
     } else {
-      await people.updatePerson({ id_event: parseInt(id) }, { matched: "" });
+      await people.updatePerson(
+        { id_event: parseInt(id) },
+        { matched: "" }
+      )
     }
 
     return res.status(201).json({ updatedEvent });

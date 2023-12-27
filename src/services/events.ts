@@ -69,10 +69,10 @@ export const doMatches = async (id: number): Promise<boolean> => {
    *
    * Grupo B (ID: 2)
    * - João
-   * - Inacio
+   * - Inácio
    *
    * Grupo C (ID: 3)
-   * - Janaina
+   * - Janaína
    */
 
   const eventItem = await prisma.event.findFirst({
@@ -114,7 +114,8 @@ export const doMatches = async (id: number): Promise<boolean> => {
             sortableFiltered = sortable.filter((sortableItem) => {
               let sortablePerson = peopleList.find(
                 (item) => item.id === sortableItem,
-              );
+              )
+
               return peopleList[i].id_group !== sortablePerson?.id_group;
             });
           }
@@ -127,15 +128,30 @@ export const doMatches = async (id: number): Promise<boolean> => {
             keepTrying = true;
           } else {
             let sortedIndex = Math.floor(
-              Math.random() * sortableFiltered.length,
-            );
+              Math.random() * sortableFiltered.length
+            )
 
             while (sortableFiltered[sortedIndex] === peopleList[i].id) {
-              sortedIndex = Math.floor(Math.random() * sortableFiltered.length);
+              sortedIndex = Math.floor(
+                Math.random() * sortableFiltered.length
+              )
             }
+
+            sortedList.push({
+              id: peopleList[i].id,
+              match: sortableFiltered[sortedIndex]
+            })
+
+            sortable = sortable.filter(
+              item => item !== sortableFiltered[sortedIndex]
+            )
           }
         }
       }
+
+      console.log(`ATTEMPTS: ${attempts}`)
+      console.log(`MAX ATTEMPTS: ${maxAttempts}`)
+      console.log(sortedList)
 
       /**
       if (attempts < maxAttempts) {
@@ -145,7 +161,7 @@ export const doMatches = async (id: number): Promise<boolean> => {
               id: sortedList[i].id,
               id_event: id,
             },
-            { matched: "" },
+            { matched: "" }, // TODO - Criar encryptMatch
           );
         }
         return true;
