@@ -15,14 +15,14 @@ export const retrievePeople = async (filters: RetrievePeopleFilters) => {
 
 type RetrievePersonFilters = {
   id_event: number;
-  id_group: number;
+  id_group?: number;
   id?: number;
   cpf?: string;
 };
 
 export const retrievePerson = async (filters: RetrievePersonFilters) => {
   try {
-    if (!filters.id && filters.cpf) {
+    if (!filters.id_event && filters.cpf) {
       return false;
     }
     return await prisma.eventPeople.findFirst({ where: filters });
