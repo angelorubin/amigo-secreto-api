@@ -13,9 +13,9 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/site", siteRoutes);
 app.all("*", requestInterceptor);
 app.use("/admin", adminRoutes);
-app.use("/site", siteRoutes);
 
 const runServer = (port: number, server: http.Server) => {
   server.listen(port, () => {
