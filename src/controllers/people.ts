@@ -171,5 +171,5 @@ export const searchPerson: RequestHandler = async (req, res) => {
     }
   }
 
-  return res.json({ errror: "Dados inválidos" });
+  return res.status(400).json({ errror: "Dados inválidos" });
 };
