@@ -140,8 +140,6 @@ export const searchPerson: RequestHandler = async (req, res) => {
 
   const query = searchPersonSchema.safeParse(req.query);
 
-  // console.log(query)
-
   if (!query.success) {
     return res.json({ errror: "Dados inválidos" });
   }
