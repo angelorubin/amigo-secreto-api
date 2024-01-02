@@ -130,51 +130,48 @@ export const destroyPerson: RequestHandler = async (req, res) => {
 };
 
 export const searchPerson: RequestHandler = async (req, res) => {
-  const { id_event } = req.params
+  const { id_event } = req.params;
 
-  console.log(req.query.cpf, id_event)
+  console.log(req.query.cpf, id_event);
 
   const searchPersonSchema = z.object({
-    cpf: z.string().transform(val => val.replace(/\.|-/gm, ''))
-  })
+    cpf: z.string().transform((val) => val.replace(/\.|-/gm, "")),
+  });
 
-  const query = searchPersonSchema.safeParse(req.query)
+  const query = searchPersonSchema.safeParse(req.query);
 
   // console.log(query)
 
   if (!query.success) {
-    return res.json({ errror: 'Dados inválidos' })
+    return res.json({ errror: "Dados inválidos" });
   }
 
   const personItem = await people.retrievePerson({
     id_event: parseInt(id_event),
-    cpf: query.data.cpf
-  })
-
-  console.log(personItem)
+    cpf: query.data.cpf,
+  });
 
   if (personItem && personItem.matched) {
-
-    const matchId = decryptMatch(personItem.matched)
+    const matchId = decryptMatch(personItem.matched);
 
     const personMatched = await people.retrievePerson({
       id_event: parseInt(id_event),
-      id: matchId
-    })
+      id: matchId,
+    });
 
     if (personMatched) {
       return res.json({
         person: {
-          id: personItem.id, name: personItem.name
+          id: personItem.id,
+          name: personItem.name,
         },
         personMatched: {
           id: personMatched.id,
-          name: personMatched.name
-        }
-      })
+          name: personMatched.name,
+        },
+      });
     }
-
   }
 
-  return res.json({ errror: 'Dados inválidos' })
+  return res.json({ errror: "Dados inválidos" });
 };
