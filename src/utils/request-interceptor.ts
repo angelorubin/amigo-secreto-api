@@ -1,6 +1,6 @@
-import { RequestHandler } from "express";
+import type { RequestHandler } from 'express'
 
 export const requestInterceptor: RequestHandler = (req, res, next) => {
-  console.group(req.method, req.originalUrl)
-  next();
-};
+  console.log(req.method, req.statusCode, req.originalUrl, req.params)
+  next()
+}

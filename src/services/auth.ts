@@ -1,4 +1,4 @@
-import { getToday } from "../utils/get-today"
+import { getToday } from '../utils/get-today'
 
 export const validatePassword = (password: string): boolean => {
   const currentPassword = getToday().split('/').join('')

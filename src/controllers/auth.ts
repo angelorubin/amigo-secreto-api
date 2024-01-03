@@ -1,38 +1,32 @@
-import { RequestHandler } from 'express';
-import { z, SafeParseReturnType } from 'zod';
-import * as auth from '../services/auth';
-
-interface IData {
-  email: string;
-  password: string;
-}
-
-interface ILogin {
-  success: boolean;
-  data: IData;
-}
+import type { RequestHandler } from 'express'
+import { z } from 'zod'
+import * as auth from '../services/auth'
 
 export const login: RequestHandler = (req, res) => {
   const loginSchema = z.object({
     email: z.string(),
     password: z.string(),
-  });
+  })
 
-  const validation = loginSchema.safeParse(req.body);
+  const validation = loginSchema.safeParse(req.body)
+
+  console.log(validation)
 
   if (!validation.success) {
-    res.json({ message: 'Dados inválidos' });
+    res.json({ message: 'Dados inválidos' })
   }
 
-  if (!auth.validatePassword(req.body.password)) {
+  const password: string = req.body.password
+
+  if (!auth.validatePassword(password)) {
     return res.status(403).json({ error: 'Acesso negado.' })
   }
 
-  res.json({ token: auth.createToken() });
+  res.json({ token: auth.createToken() })
 
   /*
   // Tipagem da requisição usando a interface iLogin
-  const validation: ILogin = loginSchema.parse(req.body);
+  const validation: ILogin = loginSchema.parse(req.body)
 
   if (!validation.success) {
     res.json({ error: 'Login com dados inválidos.' })
@@ -44,18 +38,18 @@ export const login: RequestHandler = (req, res) => {
 
   res.json({ token: auth.createToken() })
   */
-};
+}
 
 export const validate: RequestHandler = (req, res, next) => {
   if (!req.headers.authorization) {
-    return res.status(403).json({ error: 'Acesso negado' });
+    return res.status(403).json({ error: 'Acesso negado' })
   }
 
-  const token = req.headers.authorization.split(' ')[1];
+  const token = req.headers.authorization.split(' ')[1]
 
   if (!auth.validateToken(token)) {
-    return res.status(403).json({ error: 'Acesso negado' });
+    return res.status(403).json({ error: 'Acesso negado' })
   }
 
-  next();
-};
+  next()
+}

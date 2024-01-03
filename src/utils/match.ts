@@ -5,7 +5,7 @@ export const encryptMatch = (id: number): string => {
 }
 
 export const decryptMatch = (match: string): number => {
-  let idString: string = match
+  const idString: string = match
     .replace(`${token}`, '')
     .replace(`${token}`, '')
 
