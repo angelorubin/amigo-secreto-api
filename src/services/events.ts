@@ -1,18 +1,18 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import { number, z } from "zod";
-import * as people from "./people";
-import * as groups from "./groups";
-import { encryptMatch } from "../utils/match";
+import { PrismaClient, Prisma } from "@prisma/client"
+import { number, z } from "zod"
+import * as people from "./people"
+import * as groups from "./groups"
+import { encryptMatch } from "../utils/match"
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export const retrieveEvents = async () => {
   try {
-    return await prisma.event.findMany();
+    return await prisma.event.findMany()
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
 export const retrieveEvent = async (id: number) => {
   try {
@@ -20,46 +20,46 @@ export const retrieveEvent = async (id: number) => {
       where: {
         id,
       },
-    });
+    })
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
-type EventCreate = Prisma.Args<typeof prisma.event, "create">["data"];
+type EventCreate = Prisma.Args<typeof prisma.event, "create">["data"]
 
 export const create = async (data: EventCreate) => {
   try {
     return await prisma.event.create({
       data,
-    });
+    })
   } catch (error) {
-    return error;
+    return error
   }
-};
+}
 
-type EventUpdate = Prisma.Args<typeof prisma.event, "update">["data"];
+type EventUpdate = Prisma.Args<typeof prisma.event, "update">["data"]
 
 export const update = async (id: number, data: EventUpdate) => {
   try {
     return await prisma.event.update({
       where: { id },
       data,
-    });
+    })
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
 export const destroy = async (id: number) => {
   try {
     return await prisma.event.delete({
       where: { id },
-    });
+    })
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
 export const doMatches = async (id: number): Promise<boolean> => {
   /**
@@ -79,17 +79,18 @@ export const doMatches = async (id: number): Promise<boolean> => {
 
   const eventItem = await prisma.event.findFirst({
     where: { id },
-    select: { grouped: true },
-  });
+    select: { grouped: true }
+  })
 
   if (eventItem) {
     const peopleList = await people.retrievePeople({
-      id_event: id,
-    });
+      id_event: id
+    })
 
     if (peopleList) {
-      let sortedList: { id: number; match: number }[] = [];
-      let sortable: number[] = [];
+      let sortedList: Array<{ id: number, match: number }> = []
+
+      let sortable: number[] = []
 
       // A, B, C, D
       /**
@@ -99,18 +100,18 @@ export const doMatches = async (id: number): Promise<boolean> => {
        * D => ...
        */
 
-      let attempts = 0;
-      let maxAttempts = peopleList.length;
-      let keepTrying = true;
+      let attempts = 0
+      let maxAttempts = peopleList.length
+      let keepTrying = true
 
       while (keepTrying && attempts < maxAttempts) {
-        keepTrying = false;
-        attempts++;
-        sortedList = [];
-        sortable = peopleList.map((item) => item.id);
+        keepTrying = false
+        attempts++
+        sortedList = []
+        sortable = peopleList.map((item) => item.id)
 
         for (let i in peopleList) {
-          let sortableFiltered: number[] = sortable;
+          let sortableFiltered: number[] = sortable
 
           if (eventItem.grouped) {
             sortableFiltered = sortable.filter((sortableItem) => {
@@ -118,8 +119,8 @@ export const doMatches = async (id: number): Promise<boolean> => {
                 (item) => item.id === sortableItem,
               )
 
-              return peopleList[i].id_group !== sortablePerson?.id_group;
-            });
+              return peopleList[i].id_group !== sortablePerson?.id_group
+            })
           }
 
           if (
@@ -127,7 +128,7 @@ export const doMatches = async (id: number): Promise<boolean> => {
             (sortableFiltered.length === 1 &&
               peopleList[i].id === sortableFiltered[0])
           ) {
-            keepTrying = true;
+            keepTrying = true
           } else {
             let sortedIndex = Math.floor(
               Math.random() * sortableFiltered.length
@@ -163,14 +164,14 @@ export const doMatches = async (id: number): Promise<boolean> => {
               id_event: id,
             },
             { matched: encryptMatch(sortedList[i].match) }
-          );
+          )
         }
 
-        return false;
+        return false
       }
 
     }
   }
 
-  return false;
-};
+  return false
+}

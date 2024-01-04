@@ -1,29 +1,29 @@
-import { RequestHandler } from "express";
-import * as events from "../services/events";
-import * as people from "../services/people";
-import { z } from "zod";
+import type { RequestHandler } from 'express'
+import * as events from '../services/events'
+import * as people from '../services/people'
+import { z } from 'zod'
 
 export const retrieveEvents: RequestHandler = async (req, res) => {
-  const items = await events.retrieveEvents();
+  const items = await events.retrieveEvents()
 
   if (items) {
-    return res.json({ events: items });
+    return res.json({ events: items })
   }
 
-  res.json({ error: "Ocorreu um erro" });
-};
+  return res.json({ error: 'Ocorreu um erro' })
+}
 
 export const retrieveEvent: RequestHandler = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
-  const event = await events.retrieveEvent(parseInt(id));
+  const event = await events.retrieveEvent(parseInt(id))
 
   if (event) {
-    return res.json({ event });
+    return res.json({ event })
   }
 
-  res.json({ error: "Ocorreu um erro" });
-};
+  res.json({ error: 'Ocorreu um erro' })
+}
 
 export const createEvent: RequestHandler = async (req, res) => {
   const schemaCreateEvent = z.object({
@@ -31,71 +31,71 @@ export const createEvent: RequestHandler = async (req, res) => {
     description: z.string(),
     status: z.boolean(),
     grouped: z.boolean(),
-  });
+  })
 
-  const validation = schemaCreateEvent.safeParse(req.body);
+  const validation = schemaCreateEvent.safeParse(req.body)
 
   if (!validation.success) {
-    return res.json({ error: "Dados inválidos" });
+    return res.json({ error: 'Dados inválidos' })
   }
 
-  const newEvent = await events.create(validation.data);
+  const newEvent = await events.create(validation.data)
 
   if (newEvent) {
-    return res.status(201).json({ eventAdded: newEvent });
+    return res.status(201).json({ eventAdded: newEvent })
   }
 
-  res.json({ error: "Ocorreu um erro" });
-};
+  res.json({ error: 'Ocorreu um erro' })
+}
 
 export const updateEvent: RequestHandler = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
   const schemaUpdate = z.object({
     title: z.string().optional(),
     description: z.string().optional(),
     status: z.boolean().optional(),
     grouped: z.boolean().optional(),
-  });
+  })
 
-  const validation = schemaUpdate.safeParse(req.body);
+  const validation = schemaUpdate.safeParse(req.body)
 
   if (!validation.success) {
-    return res.json({ error: "Dados inválidos" });
+    return res.json({ error: 'Dados inválidos' })
   }
 
-  const updatedEvent = await events.update(parseInt(id), validation.data);
+  const updatedEvent = await events.update(parseInt(id), validation.data)
 
   if (updatedEvent) {
     if (updatedEvent.status) {
-      const result = await events.doMatches(parseInt(id));
+      const result = await events.doMatches(parseInt(id))
 
       if (result) {
-        return res.json({ error: "Grupos impossíveis de sortear" });
+        return res.json({ error: 'Grupos impossíveis de sortear' })
       } else {
-        return res.json({ groups: result });
+        return res.json({ groups: result })
       }
     } else {
       await people.updatePerson(
         { id_event: parseInt(id) },
-        { matched: "" }
+        { matched: '' }
       )
     }
 
-    return res.status(201).json({ updatedEvent });
+    return res.status(201).json({ updatedEvent })
   }
 
-  res.json({ error: "Ocorreu um erro" });
-};
+  res.json({ error: 'Ocorreu um erro' })
+}
 
 export const destroyEvent: RequestHandler = async (req, res) => {
-  const { id } = req.params;
+  const { id } = req.params
 
-  const destroyedEvent = await events.destroy(parseInt(id));
+  const destroyedEvent = await events.destroy(parseInt(id))
 
   if (destroyedEvent) {
-    return res.status(200).json({ destroyedEvent });
+    return res.status(200).json({ destroyedEvent })
   }
 
-  res.json({ error: "Ocorreu um erro" });
-};
+  res.json({ error: 'Ocorreu um erro' })
+}
