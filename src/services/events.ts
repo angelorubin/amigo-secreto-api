@@ -1,8 +1,7 @@
-import { PrismaClient, Prisma } from "@prisma/client"
-import { number, z } from "zod"
-import * as people from "./people"
-import * as groups from "./groups"
-import { encryptMatch } from "../utils/match"
+import type { Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
+import * as people from './people'
+import { encryptMatch } from '../utils/match'
 
 const prisma = new PrismaClient()
 
@@ -26,7 +25,7 @@ export const retrieveEvent = async (id: number) => {
   }
 }
 
-type EventCreate = Prisma.Args<typeof prisma.event, "create">["data"]
+type EventCreate = Prisma.Args<typeof prisma.event, 'create'>['data']
 
 export const create = async (data: EventCreate) => {
   try {
@@ -38,13 +37,13 @@ export const create = async (data: EventCreate) => {
   }
 }
 
-type EventUpdate = Prisma.Args<typeof prisma.event, "update">["data"]
+type EventUpdate = Prisma.Args<typeof prisma.event, 'update'>['data']
 
 export const update = async (id: number, data: EventUpdate) => {
   try {
-    return await prisma.event.update({
+    await prisma.event.update({
       where: { id },
-      data,
+      data
     })
   } catch (error) {
     return false

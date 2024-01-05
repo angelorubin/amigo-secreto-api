@@ -3,8 +3,16 @@ import * as events from '../services/events'
 import * as people from '../services/people'
 import { z } from 'zod'
 
+interface retrieveEventsType {
+  id: number
+  status: boolean
+  title: string
+  description: string
+  grouped: boolean
+}
+
 export const retrieveEvents: RequestHandler = async (req, res) => {
-  const items = await events.retrieveEvents()
+  const items: Promise<boolean | retrieveEventsType[]> = await events.retrieveEvents()
 
   if (items) {
     return res.json({ events: items })
