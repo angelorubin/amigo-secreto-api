@@ -5,7 +5,7 @@ import { encryptMatch } from '../utils/match'
 
 const prisma = new PrismaClient()
 
-export const retrieveEvents = async () => {
+export const retrieveEvents = async (): Promise<any> => {
   try {
     return await prisma.event.findMany()
   } catch (error) {
@@ -13,12 +13,10 @@ export const retrieveEvents = async () => {
   }
 }
 
-export const retrieveEvent = async (id: number) => {
+export const retrieveEvent = async (id: number): Promise<any> => {
   try {
     return await prisma.event.findFirst({
-      where: {
-        id,
-      },
+      where: { id }
     })
   } catch (error) {
     return false
@@ -27,7 +25,7 @@ export const retrieveEvent = async (id: number) => {
 
 type EventCreate = Prisma.Args<typeof prisma.event, 'create'>['data']
 
-export const create = async (data: EventCreate) => {
+export const create = async (data: EventCreate): Promise<any> => {
   try {
     return await prisma.event.create({
       data,
@@ -39,9 +37,9 @@ export const create = async (data: EventCreate) => {
 
 type EventUpdate = Prisma.Args<typeof prisma.event, 'update'>['data']
 
-export const update = async (id: number, data: EventUpdate) => {
+export const update = async (id: number, data: EventUpdate): Promise<EventUpdate | boolean> => {
   try {
-    await prisma.event.update({
+    return await prisma.event.update({
       where: { id },
       data
     })
@@ -50,7 +48,7 @@ export const update = async (id: number, data: EventUpdate) => {
   }
 }
 
-export const destroy = async (id: number) => {
+export const destroy = async (id: number): Promise<any> => {
   try {
     return await prisma.event.delete({
       where: { id },
@@ -60,7 +58,7 @@ export const destroy = async (id: number) => {
   }
 }
 
-export const doMatches = async (id: number): Promise<boolean> => {
+export const doMatches = async (id: number): Promise<any> => {
   /**
    * Grupo A (ID:1)
    * - Angelo
