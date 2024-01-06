@@ -64,10 +64,12 @@ export const updateEvent: RequestHandler = async (req, res) => {
     return res.json({ error: 'Dados inválidos' })
   }
 
-  const updatedEvent = await events.update(parseInt(id), validation.data)
+  const updatedEvent: Record<string, unknown> | boolean = await events.update(parseInt(id), validation.data)
 
-  if (Array.isArray(updatedEvent) && updateEvent.length > 0) {
-    if (updatedEvent.status) {
+  if (Array.isArray(updatedEvent) && updatedEvent.length > 0) {
+    const hasStatus = updatedEvent.some(item => item?.status)
+
+    if (hasStatus) {
       const result = await events.doMatches(parseInt(id))
 
       if (result) {

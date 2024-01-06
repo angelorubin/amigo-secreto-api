@@ -10,8 +10,6 @@ export const login: RequestHandler = (req, res) => {
 
   const validation = loginSchema.safeParse(req.body)
 
-  console.log(validation)
-
   if (!validation.success) {
     res.json({ message: 'Dados inválidos' })
   }
