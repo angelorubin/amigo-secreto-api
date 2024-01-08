@@ -48,47 +48,47 @@ export const createEvent: RequestHandler = async (req, res) => {
   res.json({ error: "Ocorreu um erro" });
 };
 
+interface Event {
+  status?: boolean;
+  title: string;
+  description: string;
+  grouped: boolean;
+}
+
 export const updateEvent: RequestHandler = async (req, res) => {
   const { id } = req.params;
 
-  console.log(id);
-
-  const schemaUpdate = z.object({
+  const updateEventSchema = z.object({
+    status: z.boolean().optional(),
     title: z.string().optional(),
     description: z.string().optional(),
-    status: z.boolean().optional(),
     grouped: z.boolean().optional(),
   });
 
-  const validation = schemaUpdate.safeParse(req.body);
+  const validation = updateEventSchema.safeParse(req.body);
 
   if (!validation.success) {
     return res.json({ error: "Dados inválidos" });
   }
 
-  const updatedEvent: Record<string, unknown> | boolean = await events.update(
-    parseInt(id),
-    validation.data,
-  );
+  const updatedEvent = await events.update(parseInt(id), validation.data);
 
-  if (Array.isArray(updatedEvent) && updatedEvent.length > 0) {
-    const hasStatus = updatedEvent.some((item) => item?.status);
-
-    if (hasStatus) {
-      const result = await events.doMatches(parseInt(id));
-
-      if (result) {
-        res.json({ error: "Grupos impossíveis de sortear" });
-      } else {
-        res.json({ groups: result });
-      }
+  if (updatedEvent) {
+    if (updatedEvent?.status) {
+      res.json({ OK: "OK" });
+      // const result = await events.doMatches(parseInt(id));
+      // return res.json({ error: "Grupos impossíveis de sortear" });
     } else {
-      await people.updatePerson({ id_event: parseInt(id) }, { matched: "" });
+      const updatedPerson = await people.updatePerson(
+        { id_event: parseInt(id) },
+        { matched: "" },
+      );
+      return res.status(201).json({ updatedPerson });
     }
-    return res.status(201).json({ updatedEvent });
+    return res.json({ event: updatedEvent });
   }
 
-  res.json({ error: "Ocorreu um erro" });
+  return res.json({ error: "Ocorreu um erro" });
 };
 
 export const destroyEvent: RequestHandler = async (req, res) => {
