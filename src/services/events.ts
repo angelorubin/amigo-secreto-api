@@ -1,42 +1,42 @@
-import type { Prisma } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
-import * as people from "./people";
-import * as groups from "./groups";
-import { encryptMatch } from "../utils/match";
+import type { Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
+import * as people from './people'
+import * as groups from './groups'
+import { encryptMatch } from '../utils/match'
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient()
 
 export const retrieveEvents = async (): Promise<any> => {
   try {
-    return await prisma.event.findMany();
+    return await prisma.event.findMany()
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
 export const retrieveEvent = async (id: number): Promise<any> => {
   try {
     return await prisma.event.findFirst({
       where: { id },
-    });
+    })
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
-type EventCreate = Prisma.Args<typeof prisma.event, "create">["data"];
+type EventCreate = Prisma.Args<typeof prisma.event, 'create'>['data']
 
 export const create = async (data: EventCreate): Promise<any> => {
   try {
     return await prisma.event.create({
       data,
-    });
+    })
   } catch (error) {
-    return error;
+    return error
   }
-};
+}
 
-type EventUpdate = Prisma.Args<typeof prisma.event, "update">["data"];
+type EventUpdate = Prisma.Args<typeof prisma.event, 'update'>['data']
 
 export const update = async (
   id: number,
@@ -45,22 +45,22 @@ export const update = async (
   try {
     return await prisma.event.update({
       where: { id },
-      data,
-    });
+      data
+    })
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
 export const destroy = async (id: number) => {
   try {
     return await prisma.event.delete({
       where: { id },
-    });
+    })
   } catch (error) {
-    return false;
+    return false
   }
-};
+}
 
 export const doMatches = async (id: number): Promise<any> => {
   /**
@@ -81,17 +81,17 @@ export const doMatches = async (id: number): Promise<any> => {
   const eventItem = await prisma.event.findFirst({
     where: { id },
     select: { grouped: true },
-  });
+  })
 
-  if (eventItem) {
+  if (eventItem !== null) {
     const peopleList = await people.retrievePeople({
-      id_event: id,
-    });
+      id_event: id
+    })
 
     if (peopleList) {
-      let sortedList: Array<{ id: number; match: number }> = [];
+      let sortedList: Array<{ id: number; match: number }> = []
 
-      let sortable: number[] = [];
+      let sortable: number[] = []
 
       // A, B, C, D
       /**
@@ -101,59 +101,57 @@ export const doMatches = async (id: number): Promise<any> => {
        * D => ...
        */
 
-      let attempts = 0;
-      let maxAttempts = peopleList.length;
-      let keepTrying = true;
+      let attempts = 0
+      const maxAttempts = peopleList.length
+      let keepTrying = true
 
       while (keepTrying && attempts < maxAttempts) {
-        keepTrying = false;
-        attempts++;
-        sortedList = [];
-        sortable = peopleList.map((item) => item.id);
+        keepTrying = false
+        attempts++
+        sortedList = []
+        sortable = peopleList.map((item) => item.id)
 
-        for (let i in peopleList) {
-          let sortableFiltered: number[] = sortable;
+        for (const person of peopleList) {
+          let sortableFiltered = [...sortable]
 
           if (eventItem.grouped) {
             sortableFiltered = sortable.filter((sortableItem) => {
-              let sortablePerson = peopleList.find(
+              const sortablePerson = peopleList.find(
                 (item) => item.id === sortableItem,
-              );
+              )
 
-              return peopleList[i].id_group !== sortablePerson?.id_group;
-            });
+              return person.id_group !== sortablePerson?.id_group
+            })
           }
 
           if (
             sortableFiltered.length === 0 ||
-            (sortableFiltered.length === 1 &&
-              peopleList[i].id === sortableFiltered[0])
+            (sortableFiltered.length === 1 && person.id === sortableFiltered[0])
           ) {
-            keepTrying = true;
+            keepTrying = true
           } else {
-            let sortedIndex = Math.floor(
-              Math.random() * sortableFiltered.length,
-            );
+            let sortedIndex = Math.floor(Math.random() * sortableFiltered.length)
 
-            while (sortableFiltered[sortedIndex] === peopleList[i].id) {
-              sortedIndex = Math.floor(Math.random() * sortableFiltered.length);
+            while (sortableFiltered[sortedIndex] === person.id) {
+              sortedIndex = Math.floor(Math.random() * sortableFiltered.length)
             }
 
             sortedList.push({
-              id: peopleList[i].id,
+              id: person.id,
               match: sortableFiltered[sortedIndex],
-            });
+            })
 
             sortable = sortable.filter(
-              (item) => item !== sortableFiltered[sortedIndex],
-            );
+              (item) => item !== sortableFiltered[sortedIndex]
+            )
           }
         }
       }
 
-      console.log(`ATTEMPTS: ${attempts}`);
-      console.log(`MAX ATTEMPTS: ${maxAttempts}`);
-      console.info(JSON.stringify(sortedList, null, 2));
+      console.log(`ATTEMPTS: ${attempts}`)
+      console.log(`MAX ATTEMPTS: ${maxAttempts}`)
+      console.info(JSON.stringify(sortedList, null, 2))
+      return sortedList
 
       /**
       if (attempts < maxAttempts) {
@@ -164,15 +162,15 @@ export const doMatches = async (id: number): Promise<any> => {
               id_event: id,
             },
             { matched: encryptMatch(sortedList[i].match) },
-          );
-          return true;
+          )
+          return true
         }
 
-        return false;
+        return false
       }
       */
     }
   }
 
-  return false;
-};
+  return false
+}
