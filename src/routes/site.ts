@@ -5,7 +5,6 @@ import * as people from '../controllers/people'
 const router = Router()
 
 // events routes
-router.get('/', (req, res) => res.json({ test: 'OK' }))
 router.get('/events', events.retrieveEvents)
 router.get('/events/:id', events.retrieveEvent)
 router.get('/events/:id_event/search', people.searchPerson)
