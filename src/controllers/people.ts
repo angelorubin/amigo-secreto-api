@@ -1,4 +1,4 @@
-import { RequestHandler } from 'express'
+import type { RequestHandler } from 'express'
 import * as people from '../services/people'
 import { z } from 'zod'
 import { decryptMatch } from '../utils/match'
@@ -129,17 +129,17 @@ export const destroyPerson: RequestHandler = async (req, res) => {
   return res.json({ error: 'Ocorreu um erro' })
 }
 
-type PersonItem = {
-  id?: number
+interface PersonItem {
+  id: number
   id_event: number
+  id_group: number
+  name: string
   cpf: string
-  matched: boolean
+  matched: string
 }
 
 export const searchPerson: RequestHandler = async (req, res) => {
   const { id_event } = req.params
-
-  // console.log(req.query.cpf, req.params.id_event)
 
   const searchPersonSchema = z.object({
     cpf: z.string().transform((val) => val.replace(/\.|-/gm, ''))
@@ -151,15 +151,17 @@ export const searchPerson: RequestHandler = async (req, res) => {
     return res.json({ errror: 'Dados inválidos.' })
   }
 
-  const personItem: PersonItem | null = await people.retrievePerson({
+  const personItem: PersonItem | boolean | null = await people.retrievePerson({
     id_event: parseInt(id_event),
     cpf: query.data.cpf
   })
 
-  if (personItem.matched) {
+  // console.log(personItem)
+
+  if (typeof personItem === 'object' && personItem.matched !== undefined && personItem.matched !== null) {
     const matchId = decryptMatch(personItem.matched)
 
-    const personMatched = await people.retrievePerson({
+    const personMatched: any | null = await people.retrievePerson({
       id_event: parseInt(id_event),
       id: matchId
     })
