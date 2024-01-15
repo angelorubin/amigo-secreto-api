@@ -132,8 +132,6 @@ export const destroyPerson: RequestHandler = async (req, res) => {
 export const searchPerson: RequestHandler = async (req, res) => {
   const { id_event } = req.params;
 
-  console.log(req.query.cpf, id_event);
-
   const searchPersonSchema = z.object({
     cpf: z.string().transform((val) => val.replace(/\.|-/gm, "")),
   });
