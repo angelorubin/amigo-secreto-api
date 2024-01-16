@@ -138,6 +138,7 @@ interface PersonItem {
   matched: string
 }
 
+/**
 export const searchPerson: RequestHandler = async (req, res) => {
   const { id_event } = req.params
 
@@ -158,15 +159,17 @@ export const searchPerson: RequestHandler = async (req, res) => {
 
   // console.log(personItem)
 
-  if (typeof personItem === 'object' && personItem.matched !== undefined && personItem.matched !== null) {
+  if (personItem !== null &&
+    typeof personItem === 'object' &&
+    personItem.matched !== undefined) {
     const matchId = decryptMatch(personItem.matched)
 
-    const personMatched: any | null = await people.retrievePerson({
+    const personMatched: PersonItem | null | boolean = await people.retrievePerson({
       id_event: parseInt(id_event),
       id: matchId
     })
 
-    if (personMatched) {
+    if (typeof personMatched === 'boolean' && typeof personMatched === 'object' && 'id' in personMatched) {
       return res.json({
         person: {
           id: personItem.id,
@@ -182,3 +185,4 @@ export const searchPerson: RequestHandler = async (req, res) => {
 
   return res.status(400).json({ errror: 'Dados inválidos' })
 }
+*/
