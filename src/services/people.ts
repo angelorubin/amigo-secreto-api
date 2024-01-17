@@ -4,7 +4,7 @@ import * as groups from './groups'
 
 const prisma = new PrismaClient()
 
-type RetrievePeopleFilters = { id_event: number; id_group?: number }
+interface RetrievePeopleFilters { id_event: number, id_group?: number }
 
 export const retrievePeople = async (filters: RetrievePeopleFilters) => {
   try {
@@ -14,7 +14,7 @@ export const retrievePeople = async (filters: RetrievePeopleFilters) => {
   }
 }
 
-type RetrievePersonFilters = {
+interface RetrievePersonFilters {
   id_event: number
   id_group?: number
   id?: number
@@ -22,6 +22,7 @@ type RetrievePersonFilters = {
 }
 
 export const retrievePerson = async (filters: RetrievePersonFilters) => {
+  console.log(filters)
   try {
     if (!filters.id_event && filters.cpf) {
       return false

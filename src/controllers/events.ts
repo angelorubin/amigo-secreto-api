@@ -1,7 +1,7 @@
 import type { RequestHandler } from 'express'
 import * as events from '../services/events'
 import * as people from '../services/people'
-import { boolean, object, z } from 'zod'
+import { z } from 'zod'
 
 export const retrieveEvents: RequestHandler = async (req, res) => {
   const items = await events.retrieveEvents()
@@ -70,16 +70,14 @@ export const updateEvent: RequestHandler = async (req, res) => {
 
   if (typeof updatedEvent === 'object' && updatedEvent !== null && 'status' in updatedEvent) {
     if (typeof updatedEvent.status === 'boolean' && updatedEvent.status) {
-      // const result = await events.doMatches(parseInt(id))
+      await events.doMatches(parseInt(id))
       // res.json({ error: 'Grupos impossíveis de sortear' })
-      return res.json({ updatedEvent })
+      // return res.json({ updatedEvent })
     } else {
-      /**
-      const updatedPerson = await people.updatePerson(
+      await people.updatePerson(
         { id_event: parseInt(id) },
         { matched: '' }
       )
-      */
     }
     return res.json({ updatedEvent })
   }

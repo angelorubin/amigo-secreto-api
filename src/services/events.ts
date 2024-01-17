@@ -80,7 +80,7 @@ export const doMatches = async (id: number): Promise<any> => {
 
   const eventItem = await prisma.event.findFirst({
     where: { id },
-    select: { grouped: true },
+    select: { grouped: true }
   })
 
   if (eventItem !== null) {
@@ -89,7 +89,7 @@ export const doMatches = async (id: number): Promise<any> => {
     })
 
     if (peopleList) {
-      let sortedList: Array<{ id: number; match: number }> = []
+      let sortedList: Array<{ id: number, match: number }> = []
 
       let sortable: number[] = []
 
@@ -117,7 +117,7 @@ export const doMatches = async (id: number): Promise<any> => {
           if (eventItem.grouped) {
             sortableFiltered = sortable.filter((sortableItem) => {
               const sortablePerson = peopleList.find(
-                (item) => item.id === sortableItem,
+                (item) => item.id === sortableItem
               )
 
               return person.id_group !== sortablePerson?.id_group
@@ -126,7 +126,9 @@ export const doMatches = async (id: number): Promise<any> => {
 
           if (
             sortableFiltered.length === 0 ||
-            (sortableFiltered.length === 1 && person.id === sortableFiltered[0])
+            (sortableFiltered.length === 1 &&
+              person.id === sortableFiltered[0]
+            )
           ) {
             keepTrying = true
           } else {
@@ -138,7 +140,7 @@ export const doMatches = async (id: number): Promise<any> => {
 
             sortedList.push({
               id: person.id,
-              match: sortableFiltered[sortedIndex],
+              match: sortableFiltered[sortedIndex]
             })
 
             sortable = sortable.filter(
@@ -151,9 +153,7 @@ export const doMatches = async (id: number): Promise<any> => {
       console.log(`ATTEMPTS: ${attempts}`)
       console.log(`MAX ATTEMPTS: ${maxAttempts}`)
       console.info(JSON.stringify(sortedList, null, 2))
-      return sortedList
 
-      /**
       if (attempts < maxAttempts) {
         for (let i in sortedList) {
           await people.updatePerson(
@@ -163,14 +163,10 @@ export const doMatches = async (id: number): Promise<any> => {
             },
             { matched: encryptMatch(sortedList[i].match) },
           )
-          return true
         }
-
-        return false
       }
-      */
     }
-  }
 
-  return false
+    return true
+  }
 }
