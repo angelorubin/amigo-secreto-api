@@ -8,7 +8,7 @@ const router = Router()
 
 // admin/login
 router.post('/login', auth.login)
-router.post('/ping', auth.validate, (req, res) => {
+router.get('/ping', auth.validate, (req, res) => {
   return res.json({ pong: true, admin: true })
 })
 
