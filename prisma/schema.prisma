@@ -11,6 +11,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       Int      @id @default(autoincrement())
+  username String
+  email    String   @unique
+  password String
+  // Adicione outros campos conforme necessário
+}
+
 model Event {
   id          Int           @id @default(autoincrement())
   status      Boolean       @default(false)

@@ -14,9 +14,10 @@ export const login: RequestHandler = (req, res) => {
     res.json({ message: 'Dados inválidos' })
   }
 
+  const email: string = req.body.email
   const password: string = req.body.password
 
-  if (!auth.validatePassword(password)) {
+  if (!auth.authentication({ email, password })) {
     return res.status(403).json({ error: 'Acesso negado.' })
   }
 

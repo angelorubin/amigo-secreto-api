@@ -1,8 +1,18 @@
 import { getToday } from '../utils/get-today'
 
-export const validatePassword = (password: string): boolean => {
+type Auth = {
+  email: string
+  password: string
+}
+
+export const authentication = ({ email, password }: Auth) => {
+  console.log({ email, password })
+  return true
+  /**
   const currentPassword = getToday().split('/').join('')
   return password === currentPassword
+  */
+
 }
 
 export const createToken = () => {

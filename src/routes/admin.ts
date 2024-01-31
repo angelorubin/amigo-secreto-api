@@ -3,6 +3,7 @@ import * as auth from '../controllers/auth'
 import * as events from '../controllers/events'
 import * as groups from '../controllers/groups'
 import * as people from '../controllers/people'
+import * as user from '../controllers/user'
 
 const router = Router()
 
@@ -11,6 +12,10 @@ router.post('/login', auth.login)
 router.get('/ping', auth.validate, (req, res) => {
   return res.json({ pong: true, admin: true })
 })
+
+// admin/users
+router.post('/user', auth.validate, user.createUser)
+router.get('/user/:id', auth.validate, user.retrieveUser)
 
 // admin/events
 router.get('/events', auth.validate, events.retrieveEvents)
